@@ -20,85 +20,6 @@ const vuexPersist = new VuexPersist({
 const store = new Vuex.Store({
   state: {
     boards: [
-      {
-        id: 0,
-        name: "test",
-        lists: [
-          {
-            id: 0,
-            name: "todo",
-            items: [
-              {
-                id: 0,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-              },
-              {
-                id: 1,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-                comments: [],
-              },
-              {
-                id: 2,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-              },
-              {
-                id: 3,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-              },
-            ],
-          },
-          {
-            id: 1,
-            name: "todo",
-            items: [
-              {
-                id: 0,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-              },
-            ],
-          },
-          {
-            id: 2,
-            name: "todo",
-            items: [
-              {
-                id: 0,
-                title: "first item",
-                body: "this is an item in the list",
-                date: "",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 1,
-        name: "test2",
-        lists: [
-          {
-            id: 0,
-            name: "tooooodo",
-            items: [
-              {
-                id: 0,
-                title: "fioooorst item",
-                body: "this oooois an item in the list",
-                date: "",
-              },
-            ],
-          },
-        ],
-      },
     ],
   },
   getters: {
@@ -108,13 +29,20 @@ const store = new Vuex.Store({
   },
   mutations: {
     createBoard(state, data) {
-      let boardId = state.boards[state.boards.length - 1].id || -1;
-
-      state.boards.push({
-        id: boardId + 1,
-        name: data,
-        lists: [],
-      });
+      if (state.boards.length < 1) {
+        state.boards.push({
+          id: 0,
+          name: data,
+          lists: [],
+        });
+      } else {
+        let boardId = state.boards[state.boards.length - 1]
+        state.boards.push({
+          id: boardId + 1,
+          name: data,
+          lists: [],
+        });
+      }
     },
     createList(state, data) {
       let newList = data[0];
@@ -142,11 +70,13 @@ const store = new Vuex.Store({
       let boardId = data[1];
       let listId = data[2];
 
+
       if (state.boards[boardId].lists[listId].items.length < 1) {
         state.boards[boardId].lists[listId].items.push({
           id: 0,
           title: newItem,
           body: "",
+          comments: []
         });
       } else {
         let lastItemId =
@@ -158,6 +88,41 @@ const store = new Vuex.Store({
           id: lastItemId.id + 1,
           title: newItem,
           body: "",
+          comments: []
+        });
+      }
+    },
+    createBody(state, data) {
+      let newBody = data[0];
+      let itemId = data[1]
+      let boardId = data[2];
+      let listId = data[3];
+
+      // if (state.boards[boardId].lists[listId].items[itemId].comments.length < 1) {
+        state.boards[boardId].lists[listId].items[itemId].body = newBody;
+      // }
+      console.log(state)
+    },
+    createComment(state, data) {
+      let newComment = data[0];
+      let itemId = data[1]
+      let boardId = data[2];
+      let listId = data[3];
+
+      if (state.boards[boardId].lists[listId].items[itemId].comments.length < 1) {
+        state.boards[boardId].lists[listId].items[itemId].comments.push({
+          id: 0,
+          comments: newComment
+        });
+      } else {
+        let lastCommentId =
+          state.boards[boardId].lists[listId].items[
+            state.boards[boardId].lists[listId].items[itemId].comments.length - 1
+          ];
+
+        state.boards[boardId].lists[listId].items[itemId].comments.push({
+          id: lastCommentId.id + 1,
+          comments: newComment
         });
       }
     },

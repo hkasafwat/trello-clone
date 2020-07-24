@@ -90,7 +90,7 @@ export default {
     }
   },
   mounted() {
-    if( !this.boardId ) {
+    if( !this.boardId && !this.lists || !this.lists == undefined ) {
       this.$router.push({ path: '/'})
     }
   },

@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <nav class="bg-red-800 h-16"></nav>
+    <nav class="flex flex-row bg-red-800 text-white font-bold text-2xl justify-center h-16 p-8">
+      <span class="self-center mr-auto">Trello clone</span>
+      <router-link to='/' class="self-center">Home</router-link>
+    </nav>
     <div class="mt-10">
       <!-- <AllBoards></AllBoards> -->
       <router-view></router-view>
