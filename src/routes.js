@@ -12,13 +12,17 @@ export default {
       },
 
       {
-          path: '/:board',
-          component: BoardLists
+          path: '/lists',
+          component: BoardLists,
+          name: 'board',
+          props: true
       },
 
       {
-          path: '/:board/:id',
-          component: ListItem
+          path: '/lists/item',
+          component: ListItem,
+          name: 'item',
+          props: true
       }
   ]
 }
