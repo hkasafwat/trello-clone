@@ -26,6 +26,24 @@ const store = new Vuex.Store({
     boards: (state) => {
       return state.boards;
     },
+    getBoardById: (state) => (data) => {
+      return state.boards.find(board => {
+        if (board.id == data) {
+          return board
+        }
+      })
+    },
+    getItemById: (state) => (data) => {
+      let boardId = data[0];
+      let listId = data[1];
+      let itemId = data[2];
+
+      return state.boards[boardId].list[listId].find(item => {
+        if (item.id == itemId) {
+          return item
+        }
+      })
+    }
   },
   mutations: {
     createBoard(state, data) {
@@ -38,7 +56,7 @@ const store = new Vuex.Store({
       } else {
         let boardId = state.boards[state.boards.length - 1]
         state.boards.push({
-          id: boardId + 1,
+          id: (boardId.id) + 1,
           name: data,
           lists: [],
         });

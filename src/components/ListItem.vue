@@ -72,20 +72,28 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: ["item", "listId", "lists", "boardId"],
   data() {
     return {
+      itemId: parseInt(this.$route.params.boardId),
       moveTo: false,
       commentInput: "",
       itemBodyInput: ""
     };
   },
+  computed: {
+    ...mapGetters(["getItemById"]),
+    item() {
+      return this.getItemById(this.boardId, this.listId, this.itemId);
+    },
+  },
   methods: {
     deleteItem() {
       this.$store.commit("deleteItem", [this.item, this.listId, this.boardId]);
 
-      this.$router.push({ path: "/" });
+      this.$router.go(-1);
     },
     moveItem(listId) {
       this.$store.commit("moveItem", [this.item, listId, this.boardId]);
@@ -118,7 +126,7 @@ export default {
       this.$router.push({ path: "/" });
     }
 
-    console.log(this.isComments, this.item.id);
+    console.log(this.$route.params);
   }
 };
 </script>
