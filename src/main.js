@@ -19,45 +19,38 @@ const vuexPersist = new VuexPersist({
 
 const store = new Vuex.Store({
   state: {
-    boards: [
-    ],
+    boards: [],
   },
   getters: {
     boards: (state) => {
       return state.boards;
     },
-    getBoardById: (state) => (data) => {
-      return state.boards.find(board => {
-        if (board.id == data) {
-          return board
-        }
-      })
+    getBoardById: (state) => (boardId) => {
+      return state.boards.find((board) => board.id == boardId);
     },
-    getItemById: (state) => (data) => {
-      let boardId = data[0];
-      let listId = data[1];
-      let itemId = data[2];
-
-      return state.boards[boardId].list[listId].find(item => {
-        if (item.id == itemId) {
-          return item
-        }
-      })
-    }
+    getListsById: (state) => (boardId) => {
+      return state.boards[boardId].lists;
+    },
+    getItemById: (state) => (boardId, listId, itemId) => {
+      return state.boards[boardId].lists[listId].items.find(
+        (item) => item.id == itemId
+      );
+    },
   },
   mutations: {
-    createBoard(state, data) {
+    createBoard(state, createBoardInput) {
       if (state.boards.length < 1) {
         state.boards.push({
           id: 0,
-          name: data,
+          name: createBoardInput,
           lists: [],
         });
       } else {
-        let boardId = state.boards[state.boards.length - 1]
+        let boardId = state.boards[state.boards.length - 1];
+
         state.boards.push({
-          id: (boardId.id) + 1,
-          name: data,
+          id: boardId.id + 1,
+          name: createBoardInput,
           lists: [],
         });
       }
@@ -75,7 +68,7 @@ const store = new Vuex.Store({
       } else {
         let lastListId =
           state.boards[boardId].lists[state.boards[boardId].lists.length - 1];
-        console.log(lastListId);
+
         state.boards[boardId].lists.push({
           id: lastListId.id + 1,
           name: newList,
@@ -88,13 +81,12 @@ const store = new Vuex.Store({
       let boardId = data[1];
       let listId = data[2];
 
-
       if (state.boards[boardId].lists[listId].items.length < 1) {
         state.boards[boardId].lists[listId].items.push({
           id: 0,
           title: newItem,
           body: "",
-          comments: []
+          comments: [],
         });
       } else {
         let lastItemId =
@@ -106,41 +98,43 @@ const store = new Vuex.Store({
           id: lastItemId.id + 1,
           title: newItem,
           body: "",
-          comments: []
+          comments: [],
         });
       }
     },
     createBody(state, data) {
       let newBody = data[0];
-      let itemId = data[1]
+      let itemId = data[1];
       let boardId = data[2];
       let listId = data[3];
-
-      // if (state.boards[boardId].lists[listId].items[itemId].comments.length < 1) {
-        state.boards[boardId].lists[listId].items[itemId].body = newBody;
-      // }
-      console.log(state)
+      console.log(data)
+      console.log(state.boards[boardId].lists[listId].items)
+      state.boards[boardId].lists[listId].items[itemId].body = newBody;
     },
     createComment(state, data) {
       let newComment = data[0];
-      let itemId = data[1]
+      let itemId = data[1];
       let boardId = data[2];
       let listId = data[3];
 
-      if (state.boards[boardId].lists[listId].items[itemId].comments.length < 1) {
+      if (
+        state.boards[boardId].lists[listId].items[itemId].comments.length < 1
+      ) {
         state.boards[boardId].lists[listId].items[itemId].comments.push({
           id: 0,
-          comments: newComment
+          comments: newComment,
         });
       } else {
         let lastCommentId =
-          state.boards[boardId].lists[listId].items[
-            state.boards[boardId].lists[listId].items[itemId].comments.length - 1
+          state.boards[boardId].lists[listId].items[itemId].comments[
+            state.boards[boardId].lists[listId].items[itemId].comments.length -
+              1
           ];
+          console.log(lastCommentId)
 
         state.boards[boardId].lists[listId].items[itemId].comments.push({
           id: lastCommentId.id + 1,
-          comments: newComment
+          comments: newComment,
         });
       }
     },
@@ -148,13 +142,10 @@ const store = new Vuex.Store({
       let itemToDelete = data[0];
       let listId = data[1];
       let boardId = data[2];
-      // let lastItemId = state.boards[boardId].lists[listId].items[state.boards[boardId].lists[listId].items.length - 1].id || -1 ;
 
       state.boards[boardId].lists[listId].items = state.boards[boardId].lists[
         listId
-      ].items.filter((item) => {
-        return item.id != itemToDelete.id;
-      });
+      ].items.filter((item) => item.id != itemToDelete.id);
     },
     moveItem(state, data) {
       let item = data[0];
@@ -181,7 +172,7 @@ const store = new Vuex.Store({
           date: item.date,
         });
       }
-    }
+    },
   },
   plugins: [vuexPersist.plugin],
 });

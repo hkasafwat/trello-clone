@@ -23,11 +23,11 @@
       >Move to</button>
     </div>
     <div v-if="moveTo" class="mb-4">
-      <div v-for="(list, index) in lists" :key="index">
+      <div v-for="list in lists" :key="list.id">
         <button
           @click="moveItem(list.id)"
           class="bg-yellow-400 font-bold px-10 py-3 rounded m-1"
-        >{{ index + ' : ' + list.name }}</button>
+        >{{ list.id + ' : ' + list.name }}</button>
       </div>
     </div>
     <hr class="bg-gray-400 h-1 mx-8" />
@@ -59,9 +59,10 @@
             class="bg-blue-600 text-white font-bold p-2 mt-2 rounded"
           >Add a comment</button>
         </div>
+        {{ item }}
         <div
-          v-for="(comment, index) in item.comments"
-          :key="index"
+          v-for="comment in item.comments"
+          :key="comment.id"
           class="bg-orange-300 flex flex-row shadow-md rounded border mt-2 p-2 mx-auto w-11/12 items-center"
         >
           <p class="text-lg ml-2">{{ comment.comments }}</p>
@@ -77,14 +78,19 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      itemId: parseInt(this.$route.params.boardId),
+      boardId: parseInt(this.$route.params.boardId),
+      listId: parseInt(this.$route.params.listId),
+      itemId: parseInt(this.$route.params.itemId),
       moveTo: false,
       commentInput: "",
-      itemBodyInput: ""
+      itemBodyInput: "",
     };
   },
   computed: {
-    ...mapGetters(["getItemById"]),
+    ...mapGetters(["getItemById", "getListsById"]),
+    lists() {
+      return this.getListsById(this.boardId);
+    },
     item() {
       return this.getItemById(this.boardId, this.listId, this.itemId);
     },
@@ -98,14 +104,14 @@ export default {
     moveItem(listId) {
       this.$store.commit("moveItem", [this.item, listId, this.boardId]);
 
-      this.deleteItem();
+      // this.deleteItem();
     },
     createItemBody() {
       this.$store.commit("createBody", [
         this.itemBodyInput,
-        this.item.id,
+        this.itemId,
         this.boardId,
-        this.listId
+        this.listId,
       ]);
 
       this.itemBodyInput = "";
@@ -113,21 +119,15 @@ export default {
     createComment() {
       this.$store.commit("createComment", [
         this.commentInput,
-        this.item.id,
+        this.itemId,
         this.boardId,
-        this.listId
+        this.listId,
       ]);
 
       this.commentInput = "";
-    }
+    },
   },
-  mounted() {
-    if (!this.item) {
-      this.$router.push({ path: "/" });
-    }
-
-    console.log(this.$route.params);
-  }
+  mounted() {},
 };
 </script>
 

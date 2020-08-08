@@ -1,8 +1,11 @@
 <template>
   <div>
-    {{ board }}
     <div>
-      <input type="text" class="border-blue-600 mr-4 mb-4 p-2 border-2 rounded" v-model="newListInput" />
+      <input
+        type="text"
+        class="border-blue-600 mr-4 mb-4 p-2 border-2 rounded"
+        v-model="createListInput"
+      />
       <button
         @click="createList()"
         class="bg-blue-600 text-white font-bold p-2 rounded"
@@ -24,6 +27,7 @@
             class="bg-orange-300 flex flex-row shadow-md rounded border mt-2 p-2 mx-auto w-11/12 items-center"
           >
             <p class="text-lg ml-2 mr-auto">{{ item.title }}</p>
+            {{ item }}
             <button
               @click="openListItem([list, item])"
               class="bg-orange-400 shadow-md rounded border p-2 w-2/12 items-center font-bold"
@@ -71,7 +75,7 @@ export default {
   data() {
     return {
       boardId: parseInt(this.$route.params.boardId),
-      newListInput: "",
+      createListInput: "",
       createNewItem: false,
       newItemInput: "",
       chosenList: "",
@@ -85,13 +89,13 @@ export default {
   },
   methods: {
     createList() {
-      if (this.newListInput == "") {
+      if (this.createListInput == "") {
         alert("insert list name");
         return;
       }
 
-      this.$store.commit("createList", [this.newListInput, this.board.id]);
-      this.newListInput = "";
+      this.$store.commit("createList", [this.createListInput, this.boardId]);
+      this.createListInput = "";
     },
     createItem() {
       if (this.newItemInput == "") {
@@ -112,26 +116,12 @@ export default {
       this.chosenList = listIndex;
     },
     openListItem(data) {
-      console.log(data)
       this.$router.push({
-        // name: "item",
-        // params: {
-        //   item: data[0],
-        //   listId: data[1].id,
-        //   lists: this.lists,
-        //   boardId: this.boardId,
-        // },
-        path: `/${this.boardId}/${data[0].id}/${data[1].id}`
+        path: `/${this.boardId}/${data[0].id}/${data[1].id}`,
       });
     },
   },
-  mounted() {
-    // if( !this.boardId && !this.lists || !this.lists == undefined ) {
-    //   this.$router.push({ path: '/'})
-    // }
-    // console.log(this.$route.params.board)
-    // console.log(this.$route)
-  },
+  mounted() {},
 };
 </script>
 

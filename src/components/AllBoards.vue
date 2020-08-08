@@ -2,7 +2,6 @@
   <div class="container mx-auto px-8">
     <div class="bg-teal-300 max-w-2xl flex flex-row mx-auto rounded px-4 py-2">
       <p class="text-2xl font-bold mr-auto self-center">Boards:</p>
-
       <button v-if="hideInput" @click="hideInput = !hideInput" class>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +25,7 @@
         <input
           type="text"
           class="border-teal-200 mr-4 p-2 border-2 rounded"
-          v-model="inputData"
+          v-model="createBoardInput"
           required
         />
         <button
@@ -55,7 +54,7 @@ export default {
   data() {
     return {
       hideInput: true,
-      inputData: "",
+      createBoardInput: "",
     };
   },
   computed: {
@@ -64,13 +63,13 @@ export default {
   methods: {
     createBoard() {
       this.hideInput = !this.hideInput;
-      if (this.inputData == "") {
+      if (this.createBoardInput == "") {
         alert('please enter a board name');
         this.hideInput = !this.hideInput;
         return;
       }
-      this.$store.commit("createBoard", this.inputData);
-      this.inputData = "";
+      this.$store.commit("createBoard", this.createBoardInput);
+      this.createBoardInput = "";
     },
     openBoard(board) {
       this.$router.push({
@@ -83,32 +82,4 @@ export default {
 </script>
 
 <style>
-.create-new-board {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 100%;
-}
-
-.create-new-board:after,
-.create-new-board:before {
-  content: "";
-  display: block;
-  position: relative;
-  color: white;
-  background-color: white;
-}
-
-.create-new-board:before {
-  top: 14px;
-  left: 9px;
-  width: 2rem;
-  height: 0.5rem;
-}
-
-.create-new-board:after {
-  top: -5px;
-  left: 20px;
-  width: 0.5rem;
-  height: 2rem;
-}
 </style>
