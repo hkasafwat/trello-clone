@@ -107,9 +107,15 @@ const store = new Vuex.Store({
       let itemId = data[1];
       let boardId = data[2];
       let listId = data[3];
-      console.log(data)
+      // console.log(data)
       console.log(state.boards[boardId].lists[listId].items)
-      state.boards[boardId].lists[listId].items[itemId].body = newBody;
+      // state.boards[boardId].lists[listId].items[itemId].body = newBody;
+      state.boards[boardId].lists[listId].items.forEach((item) => {
+        if (item.id == itemId) {
+          item.body = newBody
+        }
+      })
+
     },
     createComment(state, data) {
       let newComment = data[0];
